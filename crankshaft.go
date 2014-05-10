@@ -22,8 +22,8 @@ var (
 	port       = flag.Int("port", 80, "Turbine Port")
 	clusters   = flag.String("clusters", "", "Comma-separated clusters to monitor")
 	maxretries = flag.Int("maxretries", 5, "Max number of times to retry on errors")
-	statsHost  = flag.String("host", "", "StatsD Host")
-	statsPort  = flag.Int("host", 8125, "StatsD Port")
+	statsHost  = flag.String("statsHost", "", "StatsD Host")
+	statsPort  = flag.Int("statsPort", 8125, "StatsD Port")
 )
 
 func usage() {
