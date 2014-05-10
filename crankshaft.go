@@ -32,6 +32,11 @@ func usage() {
 	os.Exit(2)
 }
 
+type TurbineEvent struct {
+	clusterName string
+	data        map[string]interface{}
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -56,40 +61,40 @@ func main() {
 		usage()
 	}
 
+	// Get individual clusters, make channels
 	clusterList := strings.Split(*clusters, ",")
-	channels := make([]chan error, len(clusterList))
+	//channels := make([]chan TurbineEvent, len(clusterList))
+	eventChannel := make(chan TurbineEvent)
 
+	// Start goroutines for each cluster
 	for i := range clusterList {
-		go turbine(channels[i], strings.TrimSpace(clusterList[i]))
-
+		go turbine(eventChannel, strings.TrimSpace(clusterList[i]))
 	}
 
-	for i := range channels {
-		<-channels[i]
+	client, err := statsd.New(*statsHost+":"+strconv.Itoa(*statsPort), "hystrix")
+	if err != nil {
+		log.Println("Error creating StatsD client")
+	}
+
+	// Consume events
+	for event := range eventChannel {
+		writeStats(event, client)
 	}
 }
 
-func turbine(c chan error, clusterName string) {
+func turbine(c chan TurbineEvent, clusterName string) {
 	defer close(c)
 
 	for {
-		err := attachToTurbine(clusterName)
+		err := attachToTurbine(clusterName, c)
 		if err != nil {
 			log.Println("Turbine session ended with error", err, "restarting...")
 			time.Sleep(3 * time.Second) // wait
 		}
 	}
-
-	c <- nil
 }
 
-func attachToTurbine(clusterName string) error {
-	client, err := statsd.New(*statsHost+":"+strconv.Itoa(*statsPort), "hystrix")
-	if err != nil {
-		log.Println("Error creating StatsD client")
-		return err
-	}
-
+func attachToTurbine(clusterName string, c chan TurbineEvent) error {
 	log.Println("Opening Turbine connection for", clusterName)
 
 	// TODO: urlencode
@@ -137,27 +142,29 @@ func attachToTurbine(clusterName string) error {
 				return err
 			}
 
-			writeStats(clusterName, data, client)
+			event := TurbineEvent{clusterName, data}
+			//writeStats(event, client)
+			c <- event
 		}
 	}
 }
 
-func writeStats(clusterName string, data map[string]interface{}, client statsd.Statter) {
-	name := data["name"].(string)
-	resourceType := data["type"].(string)
+func writeStats(event TurbineEvent, client statsd.Statter) {
+	name := event.data["name"].(string)
+	resourceType := event.data["type"].(string)
 
-	for k, v := range data {
+	for k, v := range event.data {
 		// This are the only properties we want per command/pool.
 		if !strings.HasPrefix(k, "rollingCount") && !strings.HasPrefix(k, "current") &&
 			!strings.HasPrefix(k, "isCircuitBreakerOpen") && !strings.HasPrefix(k, "latencyTotal") {
 			continue
 		}
 
-		statKey := buildStatKey(clusterName, name, resourceType, k)
+		statKey := buildStatKey(event.clusterName, name, resourceType, k)
 
 		switch v := v.(type) {
 		default:
-			log.Printf("unexpected type %T, %s", v, v) // %T prints whatever type t has
+			log.Printf("unexpected data element %T, %s", v, v)
 		case string:
 			// ignored
 		case map[string]interface{}:
