@@ -64,7 +64,7 @@ func main() {
 	// Get individual clusters, make channels
 	clusterList := strings.Split(*clusters, ",")
 	//channels := make([]chan TurbineEvent, len(clusterList))
-	eventChannel := make(chan TurbineEvent)
+	eventChannel := make(chan *TurbineEvent)
 
 	// Start goroutines for each cluster
 	for i := range clusterList {
@@ -82,7 +82,7 @@ func main() {
 	}
 }
 
-func turbine(c chan TurbineEvent, clusterName string) {
+func turbine(c chan *TurbineEvent, clusterName string) {
 	defer close(c)
 
 	for {
@@ -94,7 +94,7 @@ func turbine(c chan TurbineEvent, clusterName string) {
 	}
 }
 
-func attachToTurbine(clusterName string, c chan TurbineEvent) error {
+func attachToTurbine(clusterName string, c chan *TurbineEvent) error {
 	log.Println("Opening Turbine connection for", clusterName)
 
 	// TODO: urlencode
@@ -142,14 +142,14 @@ func attachToTurbine(clusterName string, c chan TurbineEvent) error {
 				return err
 			}
 
-			event := TurbineEvent{clusterName, data}
+			event := &TurbineEvent{clusterName, data}
 			//writeStats(event, client)
 			c <- event
 		}
 	}
 }
 
-func writeStats(event TurbineEvent, client statsd.Statter) {
+func writeStats(event *TurbineEvent, client statsd.Statter) {
 	name := event.data["name"].(string)
 	resourceType := event.data["type"].(string)
 
