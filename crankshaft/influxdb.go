@@ -73,7 +73,7 @@ func (client *influxdbBackend) WriteEvent(event *TurbineEvent) {
 			series = append(series, &influxdb.Series{
 				Name:    statKey,
 				Columns: []string{"time", "value"},
-				Points:  [][]interface{}{{now, v}},
+				Points:  [][]interface{}{{now, statVal}},
 			})
 		case int64:
 			series = append(series, &influxdb.Series{
