@@ -3,7 +3,7 @@ package crankshaft
 import (
 	"bufio"
 	"bytes"
-	// "crypto/tls"
+	"crypto/tls"
 	"encoding/json"
 	"log"
 	"net"
@@ -109,9 +109,9 @@ func connectToTurbineServer() (net.Conn, error) {
 	log.Println("Opening Turbine connection host:", turbineUrl)
 	conn, err := net.Dial("tcp", turbineUrl)
 
-	// if config.TLSEnabled {
-	// 	conn = tls.Client(conn, &tls.Config{})
-	// }
+	if config.TLSEnabled {
+		conn = tls.Client(conn, &tls.Config{})
+	}
 
 	return conn, err
 }
