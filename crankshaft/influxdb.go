@@ -54,19 +54,34 @@ func (client *influxdbBackend) WriteEvent(event *TurbineEvent) {
 		case string:
 			// ignored
 		case map[string]interface{}:
-			// for pct, val := range v {
-			//      client.Gauge(statKey+"."+strings.Replace(pct, ".", "_", -1)+"_pct", int64(val.(float64)), 1.0)
-			// }
+			for pct, val := range v {
+				pctVal := int64(val.(float64))
+				series = append(series, &influxdb.Series{
+					Name:    statKey + "." + strings.Replace(pct, ".", "_", -1) + "_pct",
+					Columns: []string{"time", "value"},
+					Points:  [][]interface{}{{now, pctVal}},
+				})
+			}
 		case bool:
-			// if v {
-			//      client.Gauge(statKey, 1, 1.0)
-			// } else {
-			//      client.Gauge(statKey, 0, 1.0)
-			// }
+			var statVal int64
+			if v {
+				statVal = 1
+			} else {
+				statVal = 0
+			}
+
+			series = append(series, &influxdb.Series{
+				Name:    statKey,
+				Columns: []string{"time", "value"},
+				Points:  [][]interface{}{{now, v}},
+			})
 		case int64:
-			// client.Gauge(statKey, v, 1.0)
+			series = append(series, &influxdb.Series{
+				Name:    statKey,
+				Columns: []string{"time", "value"},
+				Points:  [][]interface{}{{now, v}},
+			})
 		case float64:
-			// client.Gauge(statKey, int64(v), 1.0)
 			series = append(series, &influxdb.Series{
 				Name:    statKey,
 				Columns: []string{"time", "value"},
