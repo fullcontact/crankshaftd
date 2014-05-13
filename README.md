@@ -5,14 +5,14 @@ Simple Go agent to ingest streaming data from Turbine via SSE and push it into S
 
 ## Property Munging
 
-All metrics related to properties (such as max threadpool size, queue lengths, etc.) are stripped by default.
+All keys related to properties (such as max threadpool size, queue lengths, etc.) are stripped by default.
 
 Properties of the following patterns are kept:
 
--current*
--rollingCount*
--latencyTotal_*
--isCircuitBreakerOpen
+- current*
+- rollingCount*
+- latencyTotal_*
+- isCircuitBreakerOpen
 
 Normal keys are pushed under `my-prefix.my-cluster.MyCommandImpl.rollingCountSuccess`
 Latencie histograms are pushed under `my-prefix.my-cluster.MyCommandImpl.latencyTotal.xx_pct`
