@@ -1,8 +1,27 @@
 crankshaftd
 ===========
 
-Simple Go agent to ingest streaming data from Turbine via SSE and push it into StatsD as a gauge or to InfluxDB.
+Simple Go agent to ingest streaming data from Turbine via SSE and push it into StatsD as a gauge or to InfluxDB as a series.
 
+## Property Munging
+
+All metrics related to properties (such as max threadpool size, queue lengths, etc.) are stripped by default.
+
+Properties of the following patterns are kept:
+
+-current*
+-rollingCount*
+-latencyTotal_*
+-isCircuitBreakerOpen
+
+Normal keys are pushed under `my-prefix.my-cluster.MyCommandImpl.rollingCountSuccess`
+Latencie histograms are pushed under `my-prefix.my-cluster.MyCommandImpl.latencyTotal.xx_pct`
+
+isCircuitBreakerOpen will be either 0 or 1.
+
+## StatsD caveat
+
+All metric values are cast from float64 -> int64. The InfluxDB backend does not have this limitation.
 
 ## Running
 
