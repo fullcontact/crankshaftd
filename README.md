@@ -57,3 +57,7 @@ Build the project
 And deploy the resulting binary & config
 
     ./crankshaftd
+    
+Or run with a different config
+
+    ./crankshaftd dev.toml
