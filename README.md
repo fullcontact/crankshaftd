@@ -15,7 +15,8 @@ Properties of the following patterns are kept:
 - isCircuitBreakerOpen
 
 Normal keys are pushed under `my-prefix.my-cluster.MyCommandImpl.rollingCountSuccess`
-Latencie histograms are pushed under `my-prefix.my-cluster.MyCommandImpl.latencyTotal.xx_pct`
+
+Latency histograms are pushed under `my-prefix.my-cluster.MyCommandImpl.latencyTotal.xx_pct`
 
 isCircuitBreakerOpen will be either 0 or 1.
 
