@@ -33,8 +33,8 @@ database = "crankshaft"
 
 Build the project
 
-  go build
+    go build
   
 And deploy the resulting binary & config
 
-  ./crankshaftd
+    ./crankshaftd
