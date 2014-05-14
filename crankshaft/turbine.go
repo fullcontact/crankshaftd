@@ -64,11 +64,11 @@ func attachToTurbine(clusterName string, c EventChannel) error {
 	}
 
 	conn, err := connectToTurbineServer()
-	defer conn.Close()
 	if err != nil {
 		log.Println("Error opening TCP socket", err)
 		return err
 	}
+	defer conn.Close()
 
 	clientConn := httputil.NewClientConn(conn, nil)
 	resp, err := clientConn.Do(req)
