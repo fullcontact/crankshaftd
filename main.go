@@ -6,9 +6,11 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/xorlev/crankshaftd/crankshaft"
 	"os"
+	"strings"
 )
 
 var (
+	VERSION    = "0.0.2-alpha"
 	configFile = flag.String("config", "config.toml", "Configuration file")
 	config     crankshaft.Config
 )
@@ -37,6 +39,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Error: Must specify at least one cluster")
 		usage()
 	}
+
+	fmt.Println(strings.Repeat("#", 80))
+	fmt.Println("Crankshaft ", VERSION)
+	fmt.Println(strings.Repeat("#", 80) + "\n")
 
 	crankshaft.MonitorClusters(config)
 }

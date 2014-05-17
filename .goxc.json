@@ -1,0 +1,15 @@
+{
+	"AppName": "crankshaftd",
+	"BuildConstraints": "linux windows darwin freebsd netbsd",
+	"PackageVersion": "0.0.2",
+	"PrereleaseInfo": "alpha",
+	"TaskSettings": {
+		"bintray": {
+			"downloadspage": "bintray.md",
+			"package": "crankshaftd",
+			"repository": "generic",
+			"subject": "xorlev"
+		}
+	},
+	"ConfigVersion": "0.9"
+}
