@@ -1,10 +1,10 @@
 package main
 
 import (
-	"./crankshaft"
 	"flag"
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"github.com/xorlev/crankshaftd/crankshaft"
 	"os"
 )
 
