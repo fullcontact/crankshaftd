@@ -70,6 +70,7 @@ func attachToTurbine(clusterName string, c EventChannel) error {
 	}
 	defer conn.Close()
 
+	conn.SetDeadline(time.Now().Add(10 * time.Second))
 	clientConn := httputil.NewClientConn(conn, nil)
 	resp, err := clientConn.Do(req)
 
@@ -86,6 +87,7 @@ func attachToTurbine(clusterName string, c EventChannel) error {
 			return err
 		}
 
+		conn.SetDeadline(time.Now().Add(10 * time.Second))
 		line = bytes.TrimSpace(line)
 		s := string(line[:])
 
