@@ -32,7 +32,7 @@ func (client *statsdBackend) WriteEvent(event *TurbineEvent) {
 	for k, v := range event.data {
 		// This are the only properties we want per command/pool.
 		if !strings.HasPrefix(k, "rollingCount") && !strings.HasPrefix(k, "current") &&
-			!strings.HasPrefix(k, "isCircuitBreakerOpen") && !strings.HasPrefix(k, "latencyExecute" &&
+			!strings.HasPrefix(k, "isCircuitBreakerOpen") && !strings.HasPrefix(k, "latencyExecute") &&
 			!strings.HasPrefix(k, "latencyTotal") {
 			continue
 		}
