@@ -1,7 +1,7 @@
 {
 	"AppName": "crankshaftd",
 	"BuildConstraints": "linux windows darwin freebsd netbsd",
-	"PackageVersion": "0.0.3",
+	"PackageVersion": "0.1.0",
 	"PrereleaseInfo": "alpha",
 	"TaskSettings": {
 		"bintray": {

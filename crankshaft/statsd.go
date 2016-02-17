@@ -29,6 +29,12 @@ func (client *statsdBackend) WriteEvent(event *TurbineEvent) {
 	name := event.data["name"].(string)
 	resourceType := event.data["type"].(string)
 
+	if _, ok := event.data["reportingHosts"]; !ok {
+		return
+	}
+
+	reportingHosts := event.data["reportingHosts"].(float64)
+
 	for k, v := range event.data {
 		// This are the only properties we want per command/pool.
 		if !strings.HasPrefix(k, "rollingCount") && !strings.HasPrefix(k, "current") &&
@@ -46,7 +52,7 @@ func (client *statsdBackend) WriteEvent(event *TurbineEvent) {
 			// ignored
 		case map[string]interface{}:
 			for pct, val := range v {
-				client.Gauge(statKey+"."+strings.Replace(pct, ".", "_", -1)+"_pct", int64(val.(float64)), 1.0)
+				client.Gauge(statKey+"."+strings.Replace(pct, ".", "_", -1)+"_pct", int64(val.(float64)/reportingHosts), 1.0)
 			}
 		case bool:
 			if v {
@@ -55,9 +61,9 @@ func (client *statsdBackend) WriteEvent(event *TurbineEvent) {
 				client.Gauge(statKey, 0, 1.0)
 			}
 		case int64:
-			client.Gauge(statKey, v, 1.0)
+			client.Gauge(statKey, v/int64(reportingHosts), 1.0)
 		case float64:
-			client.Gauge(statKey, int64(v), 1.0)
+			client.Gauge(statKey, int64(v/reportingHosts), 1.0)
 		}
 	}
 }

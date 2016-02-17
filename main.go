@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	VERSION    = "0.0.2-alpha"
+	VERSION    = "0.1.0-alpha"
 	configFile = flag.String("config", "config.toml", "Configuration file")
 	config     crankshaft.Config
 )
