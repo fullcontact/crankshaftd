@@ -67,3 +67,13 @@ func (client *statsdBackend) WriteEvent(event *TurbineEvent) {
 		}
 	}
 }
+
+func buildStatKey(clusterName string, name string, resourceType string, key string) string {
+	resourceType = strings.TrimPrefix(strings.ToLower(resourceType), "hystrix")
+
+	if name != "meta" {
+		return clusterName + "." + resourceType + "." + name + "." + key
+	} else {
+		return clusterName + "." + name + "." + key
+	}
+}

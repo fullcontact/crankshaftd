@@ -133,8 +133,6 @@ func provideStatWriter() StatWriter {
 		log.Fatal("Error:", config.BackendType, "is not a valid backend type")
 	case "statsd":
 		statClient = GetStatsClient()
-	case "influxdb":
-		statClient = GetInfluxClient()
 	}
 
 	return statClient
