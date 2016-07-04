@@ -20,9 +20,12 @@ Latency histograms are pushed under `my-prefix.my-cluster.MyCommandImpl.latencyT
 
 isCircuitBreakerOpen will be either 0 or 1.
 
+Additionally, all numeric metrics are divided by the number of reporting hosts. This is because Turbine simply
+sums all metrics, including percentiles.
+
 ## StatsD caveat
 
-All metric values are cast from float64 -> int64. The InfluxDB backend does not have this limitation.
+All metric values are cast from float64 -> int64.
 
 ## Running
 
@@ -42,13 +45,6 @@ backendtype = "influxdb"
 host = "127.0.0.1"
 port = 8125
 prefix = "hystrix"
-
-[influxdb]
-host = "127.0.0.1"
-port = 8086
-username = "crankshaft"
-password = "test"
-database = "crankshaft"
 ```
 
 Build the project
@@ -66,7 +62,7 @@ Or run with a different config
 
 ## License
 
-Copyright 2014 Michael Rose
+Copyright 2016 Michael Rose
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
