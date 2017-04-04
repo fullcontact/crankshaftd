@@ -8,7 +8,7 @@ import (
 )
 
 type statsdBackend struct {
-	*statsd.Statter
+	statsd.Statter
 }
 
 func GetStatsClient() *statsdBackend {
