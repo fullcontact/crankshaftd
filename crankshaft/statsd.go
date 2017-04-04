@@ -8,7 +8,7 @@ import (
 )
 
 type statsdBackend struct {
-	*statsd.Client
+	*statsd.Statter
 }
 
 func GetStatsClient() *statsdBackend {
@@ -17,7 +17,7 @@ func GetStatsClient() *statsdBackend {
 
 	log.Println("Opening StatsD Backend to", backend, "prefix:", prefix)
 
-	client, err := statsd.New(backend, prefix)
+	client, err := statsd.NewClient(backend, prefix)
 	if err != nil {
 		log.Println("Error creating StatsD client")
 	}
