@@ -62,6 +62,8 @@ func attachToTurbine(clusterName string, c EventChannel) error {
 		log.Println("Error creating HTTP request", err)
 		return err
 	}
+	
+	req.Host = config.Host
 
 	conn, err := connectToTurbineServer()
 	if err != nil {
