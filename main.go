@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"github.com/xorlev/crankshaftd/crankshaft"
+	"github.com/fullcontact/crankshaftd/crankshaft"
 	"os"
 	"strings"
 )
